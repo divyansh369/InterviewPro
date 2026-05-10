@@ -10,7 +10,7 @@ const app = express();
 app.use(express.json());
 app.use(cors({origin: ENV.CLIENT_URL, credentials: true}));
 
-app.use("/api/inngest",serve({client: inngest, functions: InngestFunctions}))
+app.use("/api/inngest",serve({client: inngest, functions: InngestFunctions,signingKey: ENV.INNGEST_SIGNING_KEY}))
 
 app.get("/health",(req,res) => {
     res.status(200).json({msg: "OK"});
