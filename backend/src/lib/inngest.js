@@ -6,7 +6,7 @@ export const inngest = new Inngest({ id: "InterviewPro" });
 const syncUser = inngest.createFunction(
   { 
     id: "sync-user",
-    triggers: [{ event: "user.created" }] 
+    triggers: { event: "user.created" }
   },
   async ({ event }) => {
     const { id, email_addresses, first_name, last_name, profile_image_url } = event.data;
