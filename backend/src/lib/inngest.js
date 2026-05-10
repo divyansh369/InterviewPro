@@ -7,7 +7,7 @@ export const inngest = new Inngest({ id: "InterviewPro" ,eventKey: ENV.INNGEST_E
 const syncUser = inngest.createFunction(
   { 
     id: "sync-user",
-    triggers: { event: "user.created" }
+    triggers: { event: "clerk/user.created" }
   },
   async ({ event }) => {
     const { id, email_addresses, first_name, last_name, profile_image_url } = event.data;
@@ -25,7 +25,7 @@ const syncUser = inngest.createFunction(
 const deleteUser = inngest.createFunction(
   { 
     id: "delete-user",
-    triggers: [{ event: "user.deleted" }] 
+    triggers: { event: "clerk/user.deleted" }
   },
   async ({ event }) => {
     const { id } = event.data;
