@@ -8,6 +8,7 @@ import { connectDB } from "./lib/database.js";
 import { inngest, InngestFunctions } from "./lib/inngest.js";
 import { protectedRoute } from "./middleware/protectedRoute.js";
 import chatRoutes from "./routes/chatRoutes.js";
+import sessionRoutes from "./routes/sessionRoutes.js";
 
 const app = express();
 
@@ -25,6 +26,7 @@ app.use(
 );
 
 app.use("/api/chat",chatRoutes)
+app.use("/api/sessions",sessionRoutes)
 
 app.get("/health", (req, res) => {
   res.status(200).json({ msg: "OK" });

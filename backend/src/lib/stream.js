@@ -1,12 +1,18 @@
 import { StreamChat } from "stream-chat";
+import { StreamClient } from "@stream-io/node-sdk";
 import { ENV } from "./env.js";
 
 if (!ENV.STREAM_API_KEY || !ENV.STREAM_API_SECRET) {
   console.log("Stream API KEY || SECRET KEY not found !!!");
 }
 
-export const chatClient = StreamChat.getInstance(ENV.STREAM_API_KEY,ENV.STREAM_API_SECRET);
+export const streamClient = new StreamClient(ENV.STREAM_API_KEY, ENV.STREAM_API_SECRET); // will be use for stream video call
+export const chatClient = StreamChat.getInstance(ENV.STREAM_API_KEY,ENV.STREAM_API_SECRET); // will be use for chat feature
 
+/** will use this on inngest function to sync the user data to stream when the user is created in clerk 
+ * &   
+ * also delete the user from stream when the user is deleted in clerk
+*/
 export const upsertStreamUser = async (userData) => {
     try {
         await chatClient.upsertUser(userData);
