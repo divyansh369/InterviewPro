@@ -1,2 +1,8 @@
 @import "tailwindcss";
-@plugin "daisyui";
+@plugin "daisyui"{
+    themes:all;
+}
+
+@theme {
+  --font-serif: "Playfair Display", serif;
+}
