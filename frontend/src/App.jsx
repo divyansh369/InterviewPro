@@ -25,5 +25,3 @@ function App() {
 }
 
 export default App;
-
-// todo: react-router tanstack react-query axios
