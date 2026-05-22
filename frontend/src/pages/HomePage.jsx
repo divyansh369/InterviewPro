@@ -18,17 +18,20 @@ const HomePage = () => {
       <nav className="sticky top-0 z-50 border-b border-[#E0D9CF] bg-[#F5F0E8]/90 backdrop-blur">
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
           {/* LOGO */}
-          <Link
+         <Link
             to="/"
             className="flex items-center gap-2 hover:opacity-80 transition-opacity"
           >
+            <div className="size-8 rounded-lg border-2 border-[#1A1A1A] flex items-center justify-center">
             <Waypoints
               className="size-5 text-[#1A1A1A]"
               strokeWidth={2.2}
             />
+              
+            </div>
 
             <span className="text-[21px] font-semibold tracking-tight text-[#1A1A1A]">
-              InterviewPro
+               InterviewPro
             </span>
           </Link>
 
