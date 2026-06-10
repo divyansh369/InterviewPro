@@ -13,7 +13,10 @@ import sessionRoutes from "./routes/sessionRoutes.js";
 const app = express();
 
 app.use(express.json());
-app.use(cors({ origin: ENV.CLIENT_URL, credentials: true }));
+app.use(cors({
+  origin: ["http://localhost:5173", "https://interview-pro-six.vercel.app"],
+  credentials: true
+}));
 app.use(clerkMiddleware());
 
 app.use(

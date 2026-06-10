@@ -257,7 +257,6 @@ function SessionPage() {
             </Group>
           </Panel>
 
-          {/* Swapped PanelResizeHandle to Separator */}
           <Separator className="w-2 bg-base-300 hover:bg-primary transition-colors cursor-col-resize" />
 
           {/* RIGHT PANEL - VIDEO CALLS & CHAT */}
