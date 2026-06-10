@@ -11,7 +11,7 @@ export const sessionApi = {
     return response.data;
   },
   getMyRecentSessions: async () => {
-    const response = await axiosInstance.get("/sessions/my-recent");
+    const response = await axiosInstance.get("/sessions/my-recent-sessions");
     return response.data;
   },
 
@@ -24,7 +24,7 @@ export const sessionApi = {
     const response = await axiosInstance.post(`/sessions/${id}/join`);
     return response.data;
   },    
-  
+
   endSession: async (id) => {
     const response = await axiosInstance.post(`/sessions/${id}/end`);
     return response.data;
