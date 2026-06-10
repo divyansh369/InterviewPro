@@ -10,5 +10,16 @@ const axiosInstance = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
   withCredentials: true, // by adding this field browser will send the cookies to server automatically, on every single req
 });
+axiosInstance.interceptors.request.use(async (config) => {
+  const token = await window.Clerk?.session?.getToken();
+
+  console.log("TOKEN:", token);
+
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+
+  return config;
+});
 console.log(import.meta.env.VITE_API_URL);
 export default axiosInstance;
