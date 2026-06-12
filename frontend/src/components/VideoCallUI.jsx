@@ -129,8 +129,7 @@ import {
   SpeakerLayout,
   useCallStateHooks,
 } from "@stream-io/video-react-sdk";
-import { Loader2Icon, MicIcon, VideoIcon, MonitorIcon, MoreHorizontalIcon, EllipsisIcon } from "lucide-react";
-import { useState } from "react";
+import { Loader2Icon, EllipsisIcon } from "lucide-react";
 import { useNavigate } from "react-router";
 import { Channel, Chat, MessageList, Thread, Window } from "stream-chat-react";
 
@@ -155,59 +154,64 @@ function VideoCallUI({ chatClient, channel }) {
   }
 
   return (
-    <div className="h-full flex flex-col bg-base-100">
+    <div className="h-full flex flex-col overflow-hidden" style={{ backgroundColor: "#0f0f0f" }}>
       {/* Interview Room Header */}
-      <div className="flex items-center justify-between px-4 py-2.5 border-b border-base-300">
+      <div className="flex items-center justify-between px-4 py-2.5 border-b border-white/10 bg-[#0f0f0f]">
         <div className="flex items-center gap-2">
-          <span className="text-sm font-semibold text-base-content">Interview Room</span>
-          <span className="flex items-center gap-1.5 text-xs font-medium text-success">
-            <span className="w-1.5 h-1.5 rounded-full bg-success inline-block" />
+          <span className="text-sm font-semibold text-white">Interview Room</span>
+          <span className="flex items-center gap-1.5 text-xs font-medium text-emerald-400">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 inline-block" />
             Connected
           </span>
         </div>
         {/* signal bars */}
         <div className="flex items-end gap-px h-4">
-          {[2, 3, 4, 5].map((h, i) => (
+          {[6, 9, 12, 15].map((h, i) => (
             <span
               key={i}
-              className="w-1 rounded-sm bg-success"
-              style={{ height: `${h * 3}px` }}
+              className="w-1.5 rounded-sm bg-emerald-400"
+              style={{ height: `${h}px` }}
             />
           ))}
         </div>
       </div>
 
-      {/* Video Grid */}
-      <div className="grid grid-cols-2 gap-2 p-2">
-        <div className="relative rounded-xl overflow-hidden bg-[#1c1e22] aspect-video">
+      {/* Video Grid — 2 tiles side by side */}
+      <div className="grid grid-cols-2 gap-1.5 p-2" style={{ backgroundColor: "#0f0f0f" }}>
+        <div className="relative rounded-lg overflow-hidden bg-[#1c1e22] aspect-video">
           <SpeakerLayout />
-          {/* fallback label shown inside video SDK */}
         </div>
-        {/* Placeholder for 2nd participant if SpeakerLayout only shows 1 */}
-        <div className="relative rounded-xl overflow-hidden bg-[#1c1e22] aspect-video flex items-end p-2">
-          {/* stream SDK renders inside SpeakerLayout — this slot handled by SDK */}
-          <span className="absolute bottom-2 left-2 text-xs font-semibold text-white bg-black/40 px-2 py-0.5 rounded-md">
+        <div className="relative rounded-lg overflow-hidden bg-[#1c1e22] aspect-video flex items-end p-2">
+          <span className="absolute bottom-2 left-2 text-xs font-semibold text-white/80 bg-black/50 px-2 py-0.5 rounded">
             interviewer
           </span>
         </div>
       </div>
 
-      {/* Call Controls */}
-      <div className="flex items-center justify-center gap-3 py-3 px-4 border-t border-b border-base-300">
+      {/* Call Controls — mic, camera, screen share, hang up */}
+      <div
+        className="flex items-center justify-center py-3 border-t border-white/10"
+        style={{ backgroundColor: "#0f0f0f" }}
+      >
         <CallControls onLeave={() => navigate("/dashboard")} />
       </div>
 
+      {/* Divider */}
+      <div className="border-t border-white/10" />
+
       {/* Chat Section */}
-      {chatClient && channel && (
-        <div className="flex flex-col flex-1 overflow-hidden">
-          <div className="flex items-center justify-between px-4 py-2 border-b border-base-300">
+      {chatClient && channel ? (
+        <div className="flex flex-col flex-1 overflow-hidden bg-white">
+          {/* Chat header */}
+          <div className="flex items-center justify-between px-4 py-2.5 border-b border-base-200">
             <span className="text-sm font-semibold text-base-content">Chat</span>
-            <button className="text-base-content/40 hover:text-base-content transition-colors">
+            <button className="text-base-content/30 hover:text-base-content transition-colors">
               <EllipsisIcon className="w-4 h-4" />
             </button>
           </div>
 
-          <div className="flex-1 overflow-hidden">
+          {/* Stream Chat */}
+          <div className="flex-1 overflow-hidden flex flex-col">
             <Chat client={chatClient} theme="str-chat__theme-light">
               <Channel channel={channel}>
                 <Window>
@@ -217,6 +221,19 @@ function VideoCallUI({ chatClient, channel }) {
               </Channel>
             </Chat>
           </div>
+        </div>
+      ) : (
+        /* No chat client yet — empty state */
+        <div className="flex-1 flex flex-col items-center justify-center bg-white gap-3">
+          <div className="w-12 h-12 rounded-full bg-base-200 flex items-center justify-center">
+            <svg className="w-6 h-6 text-base-content/30" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5}
+                d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+            </svg>
+          </div>
+          <p className="text-sm text-base-content/40 text-center px-4">
+            Send a message to start the conversation
+          </p>
         </div>
       )}
     </div>
