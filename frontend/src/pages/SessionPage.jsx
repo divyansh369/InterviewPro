@@ -5,7 +5,7 @@ import { useEndSession, useJoinSession, useSessionById } from "../hooks/useSessi
 import { PROBLEMS } from "../data/problem";
 import { executeCode } from "../lib/piston";
 import { getDifficultyBadgeClass } from "../lib/utils";
-import { Loader2Icon, LogOutIcon, PhoneOffIcon, BookmarkIcon, Waypoints, ClockIcon, LayoutDashboardIcon, BookOpenIcon } from "lucide-react";
+import { Loader2Icon, LogOutIcon, PhoneOffIcon, BookmarkIcon, ChevronLeftIcon, ClockIcon, LayoutDashboardIcon, BookOpenIcon } from "lucide-react";
 import CodeEditorPanel from "../components/CodeEditorPanel";
 import OutputPanel from "../components/OutputPanel";
 import useStreamClient from "../hooks/useStreamClient";
@@ -36,8 +36,9 @@ function SessionPage() {
   const { user } = useUser();
   const [output, setOutput] = useState(null);
   const [isRunning, setIsRunning] = useState(false);
-  const [activeTab, setActiveTab] = useState("problem"); // problem | editorial | hints
-  const [activeOutputTab, setActiveOutputTab] = useState("testcase"); // testcase | custom | console
+  const [activeTab, setActiveTab] = useState("problem");
+  const [activeOutputTab, setActiveOutputTab] = useState("testcase");
+  const [isChatOpen, setIsChatOpen] = useState(false);
   const elapsed = useTimer();
 
   const { data: sessionData, isLoading: loadingSession, refetch } = useSessionById(id);
@@ -111,14 +112,11 @@ function SessionPage() {
         {/* Left — Logo */}
         <div className="flex items-center gap-2">
           <span className="font-bold text-sm flex items-center gap-1.5" style={{ color: "#1a1a1a" }}>
-                        <div className="size-8 rounded-lg border-2 border-[#1A1A1A] flex items-center justify-center">
-              <Waypoints className="size-5 text-[#1A1A1A]" strokeWidth={2.2} />
-            </div>
- InterviewPro
+            <span style={{ color: "#F5A623" }}>&lt;/&gt;</span> InterviewPro
           </span>
         </div>
 
-        {/* Center Nav — pill style like dashboard */}
+        {/* Center Nav */}
         <nav className="flex items-center gap-1 bg-white rounded-full px-1.5 py-1 shadow-sm border border-black/5">
           <button
             onClick={() => navigate("/dashboard")}
@@ -183,7 +181,7 @@ function SessionPage() {
       <div className="flex-1 flex min-h-0 gap-2 px-2 pb-2">
 
         {/* ── LEFT: Problem Panel ── */}
-        <aside className="w-[500px] shrink-0 flex flex-col rounded-xl overflow-hidden" style={{ backgroundColor: "white" }}>
+        <aside className="w-[400px] shrink-0 flex flex-col rounded-xl overflow-hidden" style={{ backgroundColor: "white" }}>
           {/* Problem title area */}
           <div className="px-5 pt-4 pb-3 border-b border-gray-100">
             <div className="flex items-start justify-between mb-1">
@@ -225,23 +223,23 @@ function SessionPage() {
           </div>
 
           {/* Tab content */}
-          <div className="flex-1 overflow-y-auto px-5 py-4 space-y-5 text-sm">
+          <div className="flex-1 overflow-y-auto px-5 py-4 space-y-6 text-sm">
             {activeTab === "problem" && (
               <>
                 {/* Description */}
                 {problemData?.description && (
                   <section>
                     <div className="flex items-center gap-2 mb-2">
-                      <span className="text-gray-300 text-xs">⊟</span>
-                      <h2 className="font-semibold text-gray-900 text-xs uppercase tracking-widest">
+                      <span className="text-gray-400 text-xs">⊞</span>
+                      <h2 className="font-bold text-gray-900 text-xs uppercase tracking-widest">
                         Description
                       </h2>
                     </div>
-                    <p className="text-gray-700 leading-relaxed">
+                    <p className="text-gray-700 leading-relaxed font-normal">
                       {problemData.description.text}
                     </p>
                     {problemData.description.notes?.map((note, i) => (
-                      <p key={i} className="text-gray-500 mt-2 leading-relaxed">{note}</p>
+                      <p key={i} className="text-gray-500 mt-2 leading-relaxed italic">{note}</p>
                     ))}
                   </section>
                 )}
@@ -257,22 +255,22 @@ function SessionPage() {
                     </div>
                     <div className="space-y-3">
                       {problemData.examples.map((ex, i) => (
-                        <div key={i}>
-                          <p className="text-xs font-semibold text-gray-500 mb-1.5">
-                            Example {i + 1}
-                          </p>
-                          <div className="bg-gray-50 rounded-lg p-3 font-mono text-xs space-y-1">
+                        <div key={i} className="rounded-xl border border-gray-200 overflow-hidden">
+                          <div className="bg-gray-100 px-3 py-1.5 border-b border-gray-200">
+                            <span className="text-xs font-bold text-gray-500 tracking-wide">Example {i + 1}</span>
+                          </div>
+                          <div className="bg-[#1e1e2e] p-3 font-mono text-xs space-y-1.5">
                             <div className="flex gap-2">
                               <span className="text-[#F5A623] font-bold w-14 shrink-0">Input:</span>
-                              <span className="text-gray-700">{ex.input}</span>
+                              <span className="text-gray-300">{ex.input}</span>
                             </div>
                             <div className="flex gap-2">
                               <span className="text-[#a78bfa] font-bold w-14 shrink-0">Output:</span>
-                              <span className="text-gray-700">{ex.output}</span>
+                              <span className="text-gray-300">{ex.output}</span>
                             </div>
                             {ex.explanation && (
-                              <p className="text-gray-400 pt-1.5 border-t border-gray-100 text-xs leading-relaxed">
-                                <span className="font-semibold">Explanation:</span> {ex.explanation}
+                              <p className="text-gray-500 pt-1.5 border-t border-gray-700 text-xs leading-relaxed">
+                                <span className="font-semibold text-gray-400">Explanation:</span> {ex.explanation}
                               </p>
                             )}
                           </div>
@@ -286,16 +284,16 @@ function SessionPage() {
                 {problemData?.constraints?.length > 0 && (
                   <section>
                     <div className="flex items-center gap-2 mb-2">
-                      <span className="text-gray-300 text-xs">⊟</span>
-                      <h2 className="font-semibold text-gray-900 text-xs uppercase tracking-widest">
+                      <span className="text-gray-400 text-xs">⊞</span>
+                      <h2 className="font-bold text-gray-900 text-xs uppercase tracking-widest">
                         Constraints
                       </h2>
                     </div>
-                    <ul className="space-y-1.5">
+                    <ul className="space-y-2">
                       {problemData.constraints.map((c, i) => (
-                        <li key={i} className="flex gap-2 text-gray-500">
-                          <span className="text-[#F5A623] shrink-0">•</span>
-                          <code className="text-xs">{c}</code>
+                        <li key={i} className="flex gap-2 text-gray-600">
+                          <span className="text-[#F5A623] shrink-0 font-bold">•</span>
+                          <code className="text-xs px-1.5 py-0.5 bg-gray-100 rounded text-gray-800 font-medium">{c}</code>
                         </li>
                       ))}
                     </ul>
@@ -320,7 +318,6 @@ function SessionPage() {
 
         {/* ── CENTER: Code Editor + Output ── */}
         <main className="flex-1 flex flex-col min-w-0 overflow-hidden rounded-xl" style={{ backgroundColor: "white" }}>
-          {/* Code Editor — CodeEditorPanel owns its toolbar (language selector + Run Code) */}
           <div className="flex-1 min-h-0 overflow-hidden">
             <CodeEditorPanel
               selectedLanguage={selectedLanguage}
@@ -334,7 +331,6 @@ function SessionPage() {
 
           {/* Output / Test Results */}
           <div className="h-[300px] shrink-0 border-t border-gray-100 bg-white flex flex-col">
-            {/* Output tabs */}
             <div className="flex items-center border-b border-gray-100 px-1">
               {["Testcase", "Custom Testcase", "Console"].map((tab) => {
                 const key = tab.toLowerCase().replace(/ /g, "");
@@ -353,7 +349,6 @@ function SessionPage() {
                 );
               })}
 
-              {/* Results summary shown when output exists */}
               {output && (
                 <div className="ml-auto flex items-center gap-3 pr-4 text-xs">
                   {output.run?.stderr ? (
@@ -379,28 +374,35 @@ function SessionPage() {
         </main>
 
         {/* ── RIGHT: Video + Chat ── */}
-        <aside className="w-[420px] shrink-0 flex flex-col rounded-xl overflow-hidden" style={{ backgroundColor: "white" }}>
+        <aside
+          className="shrink-0 flex flex-col overflow-hidden rounded-xl transition-all duration-300"
+          style={{ width: isChatOpen ? "960px" : "440px", backgroundColor: "#f5f0e8" }}
+        >
           {isInitializingCall ? (
-            <div className="flex-1 flex items-center justify-center">
+            <div className="flex-1 flex items-center justify-center" style={{ width: "440px" }}>
               <div className="text-center">
                 <Loader2Icon className="w-10 h-10 mx-auto animate-spin text-[#F5A623] mb-3" />
-                <p className="text-sm text-gray-500">Connecting to video call...</p>
+                <p className="text-sm text-gray-400">Connecting to video call...</p>
               </div>
             </div>
           ) : !streamClient || !call ? (
-            <div className="flex-1 flex items-center justify-center p-6">
+            <div className="flex-1 flex items-center justify-center p-6" style={{ width: "440px" }}>
               <div className="text-center">
-                <div className="w-16 h-16 bg-error/10 rounded-full flex items-center justify-center mx-auto mb-3">
-                  <PhoneOffIcon className="w-8 h-8 text-error" />
+                <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-3" style={{ backgroundColor: "#ef444420" }}>
+                  <PhoneOffIcon className="w-8 h-8 text-red-500" />
                 </div>
-                <h3 className="font-semibold text-gray-900 mb-1">Connection Failed</h3>
+                <h3 className="font-semibold text-white mb-1">Connection Failed</h3>
                 <p className="text-sm text-gray-400">Unable to connect to the video call</p>
               </div>
             </div>
           ) : (
             <StreamVideo client={streamClient}>
               <StreamCall call={call}>
-                <VideoCallUI chatClient={chatClient} channel={channel} />
+                <VideoCallUI
+                  chatClient={chatClient}
+                  channel={channel}
+                  onChatToggle={setIsChatOpen}
+                />
               </StreamCall>
             </StreamVideo>
           )}
