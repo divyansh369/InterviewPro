@@ -60,7 +60,6 @@ export const createSession = async (req, res) => {
     }
 
     res.status(201).json({ msg: "Session created successfully", session });
-
   } catch (error) {
     console.error("Error creating session:", error);
     res.status(500).json({
@@ -97,14 +96,14 @@ export const getActiveSessions = async (req, res) => {
 export const getMyRecentSessions = async (req, res) => {
   try {
     const userId = req.user._id;
-
+    
     // get the session where the user is host or participant
     const recentSessions = await Session.find({
       status: "completed",
       $or: [{ host: userId }, { participants: userId }],
     })
-      .sort({ createdAt: -1 })
-      .limit(20);
+    .sort({ createdAt: -1 })
+    .limit(7);
 
     res.status(200).json({
       msg: "My recent sessions fetched successfully",
@@ -168,8 +167,10 @@ export const joinSession = async (req, res) => {
       return res.status(400).json({ msg: "Session is not active" });
     }
 
-    if(sessionToJoin.host.toString() === userId.toString()){
-      return res.status(400).json({ msg: "Host cannot join their session as a participant"});
+    if (sessionToJoin.host.toString() === userId.toString()) {
+      return res
+        .status(400)
+        .json({ msg: "Host cannot join their session as a participant" });
     }
 
     // add the user to the session participants

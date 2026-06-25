@@ -39,7 +39,7 @@ function DashboardPage() {
   };
 
   const activeSessions = activeSessionsData?.sessions || [];
-  const recentSessions = recentSessionsData?.sessions || [];
+  const recentSessions = recentSessionsData?.recentSessions || [];
 
   const isUserInSession = (session) => {
     if (!user.id) return false;
@@ -51,7 +51,6 @@ return (
   <div className="min-h-screen" style={{ backgroundColor: "#F5F0E8" }}>
     <Navbar />
 
-    {/* Ek hi container — sab kuch isme */}
     <div className="max-w-7xl mx-auto px-8">
 
       <WelcomeSection
