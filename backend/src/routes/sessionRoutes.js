@@ -1,6 +1,6 @@
 import express from "express";
 import { protectedRoute } from "../middleware/protectedRoute.js";
-import { createSession, getActiveSessions, getMyRecentSessions, getSessionById, joinSession, endSession } from "../controller/sessionController.js";
+import { createSession, getActiveSessions, getMyRecentSessions, getSessionById, joinSession, endSession, heartbeat } from "../controller/sessionController.js";
 
 const router = express.Router();
 
@@ -22,5 +22,5 @@ router.get("/debug-auth", (req, res) => {
 router.get("/:sessionId", protectedRoute, getSessionById);
 router.post("/:sessionId/join", protectedRoute, joinSession);
 router.post("/:sessionId/end", protectedRoute, endSession);
-
+router.post("/:sessionId/heartbeat", protectedRoute, heartbeat)
 export default router;

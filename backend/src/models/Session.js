@@ -32,6 +32,11 @@ const SessionSchema = new mongoose.Schema(
       type: String,
       default: "",
     },
+    // lastActivityAt store when last action was done by any participant
+    lastActivityAt: {
+      type: Date,
+      default: Date.now,
+    },
   },
   { timestamps: true },
 );

@@ -1,5 +1,6 @@
 import { chatClient, streamClient } from "../lib/stream.js";
 import { Session } from "../models/Session.js";
+import { cleanupSession } from "../services/SessionCleanup.js";
 
 export const createSession = async (req, res) => {
   try {
@@ -23,7 +24,9 @@ export const createSession = async (req, res) => {
       difficulty,
       host: userId,
       callId,
+      lastActivityAt: Date.now(),
     });
+    console.log(session)
 
     let videoCallCreated = false;
     try {
@@ -77,10 +80,10 @@ export const getActiveSessions = async (req, res) => {
       .limit(20);
 
     if (ActiveSessions.length === 0) {
-      res.status(200).json({ msg: "No active sessions found", sessions: [] });
+      return res.status(204).json({ msg: "No active sessions found" });
     }
 
-    res.status(200).json({
+    return res.status(200).json({
       msg: "Active sessions fetched successfully",
       sessions: ActiveSessions,
     });
@@ -96,14 +99,14 @@ export const getActiveSessions = async (req, res) => {
 export const getMyRecentSessions = async (req, res) => {
   try {
     const userId = req.user._id;
-    
+
     // get the session where the user is host or participant
     const recentSessions = await Session.find({
       status: "completed",
       $or: [{ host: userId }, { participants: userId }],
     })
-    .sort({ createdAt: -1 })
-    .limit(7);
+      .sort({ createdAt: -1 })
+      .limit(7);
 
     res.status(200).json({
       msg: "My recent sessions fetched successfully",
@@ -174,6 +177,7 @@ export const joinSession = async (req, res) => {
     }
 
     // add the user to the session participants
+    sessionToJoin.lastActivityAt = Date.now();
     sessionToJoin.participants.push(userId);
     await sessionToJoin.save();
 
@@ -215,15 +219,18 @@ export const endSession = async (req, res) => {
     }
 
     // end the stream video call
-    const call = streamClient.video.call("default", sessionToEnd.callId);
-    await call.delete({ hard: true });
+    // const call = streamClient.video.call("default", sessionToEnd.callId);
+    // await call.delete({ hard: true });
 
-    // end the stream chat channel
-    const chatChannel = chatClient.channel("messaging", sessionToEnd.callId);
-    await chatChannel.delete();
+    // // end the stream chat channel
+    // const chatChannel = chatClient.channel("messaging", sessionToEnd.callId);
+    // await chatChannel.delete();
 
-    sessionToEnd.status = "completed";
-    await sessionToEnd.save();
+    // sessionToEnd.lastActivityAt = Date.now();
+    // sessionToEnd.status = "completed";
+    // await sessionToEnd.save();
+
+    await cleanupSession(sessionToEnd)
 
     res
       .status(200)
@@ -236,3 +243,34 @@ export const endSession = async (req, res) => {
     });
   }
 };
+
+export const heartbeat = async (req, res) => {
+  try {
+    const { sessionId } = req.params;
+    const userId = req.user._id;
+
+    const session = await Session.findById(sessionId)
+
+    if (!sessionId) {
+      return res.status(404).json({ msg: "Session not found" })
+    }
+
+    // check user authentication 
+    if (session.host.toString() !== userId.toString() && !session.participants.includes(userId)) {
+      return res.status(403).json({ msg: "Unauthorized to send heartbeat for this session" })
+    }
+
+    session.lastActivityAt = Date.now();
+    await session.save()
+
+    res.status(200).json({ msg: "Heartbeat recorded successfully" })
+    console.log('heartbeat 💓💓💓')
+
+  } catch (error) {
+    console.error("Error:", error)
+    res.status(500).json({
+      msg: "Internal server error",
+      error: error.message,
+    })
+  }
+}

@@ -11,6 +11,7 @@ import OutputPanel from "../components/OutputPanel";
 import useStreamClient from "../hooks/useStreamClient";
 import { StreamCall, StreamVideo } from "@stream-io/video-react-sdk";
 import VideoCallUI from "../components/VideoCallUI";
+import { sessionApi } from "../api/sessions";
 
 // Simple timer hook
 function useTimer() {
@@ -79,6 +80,21 @@ function SessionPage() {
       setCode(problemData.starterCode[selectedLanguage]);
     }
   }, [problemData, selectedLanguage]);
+
+  // sending the heartbeat
+  useEffect(() => {
+    if(!session) return ;
+    const interval = setInterval(async()=>{
+      try {
+        await sessionApi.heartbeat(session._id);
+        console.log("Heartbeat sent successfully");
+      } catch (error) {
+        console.log(error);
+      }
+    },10000)
+
+    return () => clearInterval(interval);
+  },[id,session,isHost,isParticipants])
 
   const handleLanguageChange = (e) => {
     const newLang = e.target.value;

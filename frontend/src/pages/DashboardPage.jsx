@@ -43,7 +43,7 @@ function DashboardPage() {
 
   const isUserInSession = (session) => {
     if (!user.id) return false;
-    console.log(session);
+    // console.log(session);
     return session.host?.clerkId === user.id || session.participants?.some(participant => participant.clerkId === user.id)
   }  
 

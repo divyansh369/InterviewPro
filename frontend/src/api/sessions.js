@@ -23,7 +23,7 @@ export const sessionApi = {
   joinSession: async (id) => {
     const response = await axiosInstance.post(`/sessions/${id}/join`);
     return response.data;
-  },    
+  },
 
   endSession: async (id) => {
     const response = await axiosInstance.post(`/sessions/${id}/end`);
@@ -33,4 +33,8 @@ export const sessionApi = {
     const response = await axiosInstance.get(`/chat/token`);
     return response.data;
   },
+  heartbeat: async (id) => {
+    const response = await axiosInstance.post(`/sessions/${id}/heartbeat`);
+    return response.data;
+  }
 };
