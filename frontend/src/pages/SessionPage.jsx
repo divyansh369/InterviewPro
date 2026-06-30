@@ -91,7 +91,7 @@ function SessionPage() {
       } catch (error) {
         console.log(error);
       }
-    },10000)
+    },2*60*1000)
 
     return () => clearInterval(interval);
   },[id,session,isHost,isParticipants])
