@@ -174,7 +174,7 @@ export const joinSession = async (req, res) => {
     }
 
     // add the user to the session participants
-    sessionToJoin.participants = userId;
+    sessionToJoin.participants.push(userId);
     await sessionToJoin.save();
 
     // add the user to chat

@@ -47,13 +47,13 @@ function SessionPage() {
 
   const session = sessionData?.session;
   const isHost = session?.host?.clerkId === user?.id;
-  const isParticipant = session?.participant?.clerkId === user?.id;
+  const isParticipants = session?.participants?.some(participant => participant.clerkId === user?.id);
 
   const { call, channel, chatClient, isInitializingCall, streamClient } = useStreamClient(
     session,
     loadingSession,
     isHost,
-    isParticipant
+    isParticipants
   );
 
   const problemData = session?.problem
@@ -65,9 +65,9 @@ function SessionPage() {
 
   useEffect(() => {
     if (!session || !user || loadingSession) return;
-    if (isHost || isParticipant) return;
+    if (isHost || isParticipants) return;
     joinSessionMutation.mutate(id, { onSuccess: refetch });
-  }, [session, user, loadingSession, isHost, isParticipant, id]);
+  }, [session, user, loadingSession, isHost, isParticipants, id]);
 
   useEffect(() => {
     if (!session || loadingSession) return;

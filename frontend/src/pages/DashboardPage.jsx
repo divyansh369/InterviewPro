@@ -43,9 +43,9 @@ function DashboardPage() {
 
   const isUserInSession = (session) => {
     if (!user.id) return false;
-
-    return session.host?.clerkId === user.id || session.participant?.clerkId === user.id;
-  };
+    console.log(session);
+    return session.host?.clerkId === user.id || session.participants?.some(participant => participant.clerkId === user.id)
+  }  
 
 return (
   <div className="min-h-screen" style={{ backgroundColor: "#F5F0E8" }}>

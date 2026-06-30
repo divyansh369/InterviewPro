@@ -64,20 +64,20 @@ function ActiveSessions({ sessions, isLoading, isUserInSession }) {
                     </div>
                     <div className="flex items-center gap-1">
                       <UsersIcon className="size-3" />
-                      <span>{session.participant ? "2/2" : "1/2"}</span>
+                      <span>{session.participants.length >= 1 ? "2/2" : "1/2"}</span>
                     </div>
                     <span className="text-xs px-2 py-0.5 rounded-full"
-                      style={session.participant && !isUserInSession(session)
+                      style={session.participants.length >= 1 && !isUserInSession(session)
                         ? { backgroundColor: "#FEE2E2", color: "#991B1B" }
                         : { backgroundColor: "#DCFCE7", color: "#166534" }}>
-                      {session.participant && !isUserInSession(session) ? "FULL" : "OPEN"}
+                      {session.participants.length >= 1 && !isUserInSession(session) ? "FULL" : "OPEN"}
                     </span>
                   </div>
                 </div>
               </div>
 
               {/* RIGHT */}
-              {session.participant && !isUserInSession(session) ? (
+              {session.participants.length >= 1 && !isUserInSession(session) ? (
                 <button className="px-4 py-2 rounded-full text-sm font-medium border border-[#D0C9BF] text-[#9B9590]"
                   disabled>
                   Full
