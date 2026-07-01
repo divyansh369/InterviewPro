@@ -3,7 +3,7 @@
 A real-time collaborative technical interview platform that enables developers to conduct coding interviews with integrated video calling, live chat, coding challenges, code execution, and session management.
 
 <p align="center">
-  <img src="Images/LandingPage" width="900">
+  <img src="./Images/LandingPage" width="900">
 </p>
 
 ---
