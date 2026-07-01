@@ -28,8 +28,8 @@ app.use(
   }),
 );
 
-app.use("/api/chat",chatRoutes)
-app.use("/api/sessions",sessionRoutes)
+app.use("/api/chat", chatRoutes)
+app.use("/api/sessions", sessionRoutes)
 
 app.get("/health", (req, res) => {
   res.status(200).json({ msg: "OK" });
