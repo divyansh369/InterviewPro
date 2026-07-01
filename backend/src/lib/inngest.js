@@ -57,7 +57,7 @@ const deleteUser = inngest.createFunction(
 const cleanupInactiveSessions = inngest.createFunction(
   {
     id: "cleanup-inactive-sessions",
-    cron: "*/5 * * * *", // Pass the cron configuration here
+    trigger: { cron: "*/5 * * * *" },
   },
   async ({ step }) => {
     const THIRTY_MINUTES = 30 * 60 * 1000;

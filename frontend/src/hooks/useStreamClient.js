@@ -83,7 +83,7 @@ function useStreamClient(session, loadingSession, isHost, isParticipants) {
         }
       })();
     };
-  }, [session, loadingSession, isHost, isParticipants]);
+  }, [session?.callId, loadingSession, isHost, isParticipants]);
 
   return { streamClient, call, chatClient, channel, isInitializingCall };
 }

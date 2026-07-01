@@ -94,7 +94,7 @@ function SessionPage() {
     },2*60*1000)
 
     return () => clearInterval(interval);
-  },[id,session,isHost,isParticipants])
+  }, [session?.callId, loadingSession, isHost, isParticipants])
 
   const handleLanguageChange = (e) => {
     const newLang = e.target.value;
