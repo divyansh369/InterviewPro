@@ -1,10 +1,11 @@
 import express from "express";
 import { protectedRoute } from "../middleware/protectedRoute.js";
 import { createSession, getActiveSessions, getMyRecentSessions, getSessionById, joinSession, endSession, heartbeat } from "../controller/sessionController.js";
+import { fixedWindowRateLimiter } from "../middleware/fixedWindowRateLimiter.js";
 
 const router = express.Router();
 
-router.post("/", protectedRoute, createSession);
+router.post("/", protectedRoute,fixedWindowRateLimiter, createSession);
 router.get("/active", protectedRoute, getActiveSessions);
 router.get("/my-recent-sessions", protectedRoute, getMyRecentSessions);
 router.get("/debug-auth", (req, res) => {
