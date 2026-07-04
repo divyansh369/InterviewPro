@@ -21,7 +21,7 @@ export const fixedWindowRateLimiter = (req, res, next) => {
         fixedWindowStore[ip].resetTime = now + WINDOW_MS;
     }
 
-    // check if the user has exceeded the maximum number of requests    
+    // ! 3. Check if the user has exceeded the maximum number of requests
     if (fixedWindowStore[ip].count >= MAX_REQUEST) {
         // The user has exceeded the maximum number of requests in the current window
         return res.status(429).json({ message: 'Too many requests. Please try again later.' });
@@ -29,5 +29,6 @@ export const fixedWindowRateLimiter = (req, res, next) => {
 
     // Increment the request count for the user
     fixedWindowStore[ip].count ++;
+    console.log(fixedWindowStore[ip]);
     next();
 }

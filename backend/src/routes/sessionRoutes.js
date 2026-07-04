@@ -2,10 +2,11 @@ import express from "express";
 import { protectedRoute } from "../middleware/protectedRoute.js";
 import { createSession, getActiveSessions, getMyRecentSessions, getSessionById, joinSession, endSession, heartbeat } from "../controller/sessionController.js";
 import { fixedWindowRateLimiter } from "../middleware/fixedWindowRateLimiter.js";
+import { slidingWindowRateLimiter } from "../middleware/SlidingWindowRateLimiter.js";
 
 const router = express.Router();
 
-router.post("/", protectedRoute,fixedWindowRateLimiter, createSession);
+router.post("/", protectedRoute,slidingWindowRateLimiter, createSession);
 router.get("/active", protectedRoute, getActiveSessions);
 router.get("/my-recent-sessions", protectedRoute, getMyRecentSessions);
 router.get("/debug-auth", (req, res) => {
