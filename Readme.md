@@ -3,7 +3,7 @@
 A real-time collaborative technical interview platform that enables developers to conduct coding interviews with integrated video calling, live chat, coding challenges, code execution, and session management.
 
 ![Dashboard](./Images/LandingPage.png)
-
+[![Architecture diagram of divyansh369/interviewpro](https://gitdiagram.com/divyansh369/interviewpro/diagram.png)](https://gitdiagram.com/divyansh369/interviewpro?utm_source=readme&utm_medium=picture)
 ---
 
 ## Table of Contents
